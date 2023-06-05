@@ -1,0 +1,101 @@
+# Тестовые данные
+@baseUrl = {{baseUrl}}
+@accessToken = {{login.response.body.$.accessToken}}
+@productId = {{product.response.body.$.id}}
+
+# Пользователи
+## Регистрация пользователя
+POST {{baseUrl}}/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Twister",
+  "email": "mistertwister@gmail.com",
+  "avatar": "twister.png",
+  "password": "353twists"
+}
+
+###
+
+## Авторизация пользователя
+# @name login
+POST {{baseUrl}}/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mistertwister@gmail.com",
+  "password": "353twists"
+}
+
+###
+
+## Проверка токена пользователя
+GET {{baseUrl}}/users/login HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
+
+# Товары
+## Получить список товаров
+GET {{baseUrl}}/products?limit=5&guitar=Electro&cord=6 HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Создать карточку товара
+# @name product
+POST {{baseUrl}}/products HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "СURT Z30 PLUS",
+  "description": "Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.",
+  "postDate": "2023-06-04T21:00:00.000Z",
+  "guitar": "Electro",
+  "sku": "SO754565",
+  "cord": 6,
+  "price": 10000,
+  "image": "https://www.cortguitarsshop.ru/images/cache/55a46cac34358443e2f74596c77cf523_460x460x-1.png"
+}
+###
+
+## Получить информацию по товару
+GET {{baseUrl}}/products/{{productId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+## Редактировать информацию по товару
+PATCH  {{baseUrl}}/products/{{productId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "guitar": "Ukulele"
+}
+
+###
+
+## Удалить товар
+DELETE {{baseUrl}}/products/{{productId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
+## Загрузка изображения товара
+POST {{baseUrl}}/products/{{productId}}/image HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="poster"; filename="catalog-product-0.png"
+Content-Type: image/jpg
+
+< ./markup/img/content/catalog-product-0.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+

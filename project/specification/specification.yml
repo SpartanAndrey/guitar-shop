@@ -1,0 +1,445 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта «Guitar Shop».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Guitar Shop».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+
+tags:
+  - name: products
+    description: Действия с товарами.
+  - name: users
+    description: Действия с пользователями.
+
+paths:
+  /products:
+    post:
+      tags:
+        - products
+      summary: Добавление нового товара
+      description: Возвращает товар с идентификатором productId в виде объекта.
+
+      requestBody:
+        description: Объект с новым товаром.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newProduct'
+        required: true
+
+      responses:
+        "201":
+          description: Товар добавлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+
+        "400":
+          description: Ошибка тела запроса.
+        
+        "401":
+          description: Пользователь не авторизован.
+
+    
+  /products/?limit=7&guitar=Electro&cord=6:
+    get:
+      tags:
+        - products
+      summary: Получение списка товаров
+      description: Возвращает массив товаров. Каждый товар описан в виде объекта.
+
+      parameters:
+        - name: limit
+          in: query
+          description: Количество товаров, которые возвращает сервис, по умолчанию 7.
+          schema:
+            type: number
+            example: 7
+
+        - name: guitar
+          in: query
+          description: Список товаров определённого типа.
+          schema:
+            type: string
+            example: Electro
+        
+        - name: cord
+          in: query
+          description: Список товаров определённого типа.
+          schema:
+            type: number
+            example: 6
+
+      responses:
+        "200":
+          description: Массив товаров.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+
+  /products/{productId}:
+    post:
+      tags:
+        - products
+      summary: Редактирование информации по товару
+      description: Возвращает изменённую детальную информацию по товару с идентификатором productId в виде объекта.
+
+      requestBody:
+        description: Объект с изменённой информацией по товару.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/editedProduct'
+        required: true
+
+      responses:
+        "201":
+          description: Товар изменён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+
+        "400":
+          description: Ошибка тела запроса.
+        
+        "401":
+          description: Пользователь не авторизован.
+        
+        "403":
+          description: Нет доступа.
+
+    get:
+      tags:
+        - products
+      summary: Получение информации по товару
+      description: Возвращает детальную информацию по товару с идентификатором productId в виде объекта.
+
+      responses:
+        "200":
+          description: Объект товара.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'    
+
+        "404":
+          description: Товар не найден.
+
+    delete:
+      tags:
+        - products
+      summary: Удаление товара
+      description: Удаляет товар с идентификатором productId.
+
+      responses:
+        "200":
+          description: Товар удалён.    
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "403":
+          description: Нет доступа.
+
+  /users/{productId}/image:
+    post:
+      tags:
+        - products
+      summary: Загрузить изображение
+      description: Загружает изображение товара. Изображение должно быть в формате `png` или `jpg`.
+    
+      parameters:
+        - name: productId
+          in: path
+          description: Уникальный идентификатор товара
+          required: true
+          schema:
+            type: number
+            example: 1
+
+      responses:
+        "201":
+          description: Товар изменен.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/authorizedUser"
+
+        "400":
+          description: Ошибка тела запроса.
+  
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля.
+
+      requestBody:
+        description: Объект, содержащий логин и пароль пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/login"
+        required: true
+
+      responses:
+        "200":
+          description: Статус авторизации.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/authorizedUser"
+
+        "400":
+          description: Ошибка тела запроса.
+
+        "404":
+          description: Пользователь не найден.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю.
+
+      responses:
+        "200":
+          description: Статус авторизации пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/authorizedUser"
+
+        "401":
+          description: Пользователь не авторизован.
+  
+components:
+  schemas:
+    newProduct:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: СURT Z30 PLUS
+
+        description:
+          type: string
+          example: Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        
+        postDate:
+          type: date-time
+          example: 2023-01-17T21:26:40.283Z
+      
+        guitar:
+          type: string
+          example: Electro
+
+        sku:
+          type: string
+          example: SO754565
+        
+        cord:
+          type: number
+          example: 6
+
+        price:
+          type: number
+          example: 10000
+
+        image:
+          type: string
+          example: add-item-1.png
+
+    editedProduct:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: СURT Z30 PLUS
+
+        description:
+          type: string
+          example: Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        
+        postDate:
+          type: date-time
+          example: 2023-01-17T21:26:40.283Z
+      
+        guitar:
+          type: string
+          example: Электрогитара
+
+        sku:
+          type: string
+          example: SO754565
+        
+        cord:
+          type: number
+          example: 6
+
+        price:
+          type: number
+          example: 10000
+
+        image:
+          type: string
+          example: add-item-1.png
+
+    product:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: СURT Z30 PLUS
+
+        description:
+          type: string
+          example: Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        
+        postDate:
+          type: date-time
+          example: 2023-01-17T21:26:40.283Z
+      
+        guitar:
+          type: string
+          example: Электрогитара
+
+        sku:
+          type: string
+          example: SO754565
+        
+        cord:
+          type: number
+          example: 6
+
+        price:
+          type: number
+          example: 10000
+
+        image:
+          type: string
+          example: add-item-1.png
+    
+    products:
+      type: array
+
+      items: 
+        type: object
+
+      properties:
+        title:
+          type: string
+          example: СURT Z30 PLUS
+
+        postDate:
+          type: date-time
+          example: 2023-01-17T21:26:40.283Z
+      
+        price:
+          type: number
+          example: 10000
+
+        image:
+          type: string
+          example: add-item-1.png
+  
+    newUser:
+      type: object
+
+      properties:
+        name:
+          type: string
+          example: Spartan
+        
+        email:
+          type: string
+          example: spartan@gmail.com
+
+        password:
+          type: string
+          example: 2312Sparta
+
+    user:
+      type: object
+
+      properties:
+        firstname:
+          type: string
+          example: Spartan
+        
+        email:
+          type: string
+          example: spartan@gmail.com
+
+        password:
+          type: string
+          example: 2312Sparta
+        
+    login:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: spartan@gmail.com
+
+        password:
+          type: string
+          example: 2312Sparta
+
+    authorizedUser:
+      type: object
+
+      properties:
+        firstname:
+          type: string
+          example: Spartan
+        
+        email:
+          type: string
+          example: spartan@gmail.com
+
+        password:
+          type: string
+          example: 2312Sparta
+        
+        token:
+          type: string
+          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        

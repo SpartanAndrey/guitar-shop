@@ -1,0 +1,36 @@
+{
+  "api": {
+    "titles": [
+      "СURT Z30 PLUS",
+      "Chester Bass"
+    ],
+    "descriptions": [
+      "Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки."
+    ],
+    "guitars": [
+      "Electro", 
+      "Comedy", 
+      "Ukulele"
+    ],
+    "skus": [
+      "SO754565",
+      "SO754566",
+      "SO754567",
+      "SO754568",
+      "SO754569"
+    ],
+    "cords": [
+      "4",
+      "6",
+      "7",
+      "12"
+    ],
+    "images": [
+      "https://www.exberliner.com/wp-content/uploads/2022/01/Inception-Warner-Bros.jpg",
+      "https://media.vanityfair.com/photos/5c0ef38ef1a5a50e00b020ee/1:1/w_1332,h_1332,c_limit/Green-Book-Truth-Theme.jpg",
+      "https://lostfilm.info/images/photo/109/21155758_1085595.jpg",
+      "https://s5.afisha.ru/mediastorage/54/48/fcdc46c5732d455a89d0cbce4854.jpg",
+      "https://compote.slate.com/images/cdcf74ae-c30a-483a-b99c-7e888c4bf1f4.jpg"
+    ]
+  }
+}
