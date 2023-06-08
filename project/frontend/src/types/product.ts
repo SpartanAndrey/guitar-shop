@@ -1,7 +1,8 @@
 export type Product = {
+  id: number;
   title: string;
   description: string;
-  postDate: Date;
+  postDate: string;
   guitar: string;
   sku: string;
   cord: number;

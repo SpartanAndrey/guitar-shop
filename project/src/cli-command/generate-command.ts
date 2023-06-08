@@ -4,7 +4,7 @@ import TSVFileWriter from '../common/file-writer/tsv-file-writer.js';
 import ProductGenerator from '../common/product-generator/product-generator.js';
 import { MockData } from '../types/mock-data.type.js';
 import { CliCommandInterface } from './cli-command.interface.js';
-
+1
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
   private initialData!: MockData;
